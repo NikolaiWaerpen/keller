@@ -10,5 +10,5 @@ RUN yarn install
 RUN npx prisma generate
 COPY . .
 RUN npx tsc
-EXPOSE 3000
+EXPOSE 8080
 CMD npx prisma migrate deploy && yarn start
