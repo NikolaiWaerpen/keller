@@ -8,4 +8,6 @@ const server = new ApolloServer({ schema });
 
 server
   .listen(8080)
-  .then(({ url }: any) => console.log(`Server started successfully on ${url}`));
+  .then(({ url }: { url: string }) =>
+    console.log(`Server started successfully on ${url}`)
+  );
