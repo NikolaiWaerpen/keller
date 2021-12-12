@@ -62,8 +62,6 @@ export const userMutation = extendType({
       resolve: async (_, args) => {
         const { name, email, image } = args.input;
 
-        console.log("input", args.input);
-
         const userExists = await prisma.user.findFirst({
           where: {
             email,

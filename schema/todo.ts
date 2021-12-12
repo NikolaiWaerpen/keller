@@ -1,5 +1,5 @@
 import { ApolloError } from "apollo-server-errors";
-import { arg, extendType, inputObjectType, nonNull, objectType } from "nexus";
+import { extendType, inputObjectType, objectType } from "nexus";
 import { Todo } from "nexus-prisma";
 import { prisma } from "../index";
 
