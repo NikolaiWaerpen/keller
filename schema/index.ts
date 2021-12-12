@@ -1,6 +1,7 @@
 import { makeSchema } from "nexus";
-import * as todos from "./todos";
+import * as todo from "./todo";
+import * as user from "./user";
 
 export const schema = makeSchema({
-  types: [todos],
+  types: [todo, user],
 });

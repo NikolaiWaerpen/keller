@@ -7,6 +7,7 @@
     "dev": "docker-compose up -d; npx prisma migrate dev; npx prisma generate; tsnd --respawn --transpile-only index.ts",
     "start": "tsnd --respawn --transpile-only index.ts",
     "generate": "npx prisma generate",
+    "format": "npx prisma format",
     "migrate": "npx prisma migrate dev",
     "studio": "npx prisma studio"
   },
