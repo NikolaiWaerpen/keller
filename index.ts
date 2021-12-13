@@ -4,24 +4,34 @@ import { schema } from "./schema";
 
 export const prisma = new PrismaClient();
 
+function findUser() {}
+
 const server = new ApolloServer({
   schema,
-  context: async ({ req, res }) => {
-    const requestUser = req.headers.from;
+  context: async ({ req }) => {
+    const requestUser = req.headers.from,
+      isDevelopment = process.env.NODE_ENV === "development";
 
-    let user;
-    try {
-      user = await prisma.user.findUnique({
+    if (!requestUser && !isDevelopment)
+      throw new AuthenticationError("you are not authenticated");
+
+    if (requestUser) {
+      const user = await prisma.user.findUnique({
         where: {
           email: requestUser,
         },
       });
-    } catch (error) {
-      if (!user) throw new AuthenticationError("you are not authenticated");
-      console.log(error);
+
+      return { prisma, user };
     }
 
-    return { prisma, user };
+    // GraphQL playground
+    else if (!requestUser && isDevelopment) {
+      // TODO: create or update prisma user read on upsert
+      const user = {};
+
+      return { prisma, user };
+    }
   },
 });
 
