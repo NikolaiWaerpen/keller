@@ -9,14 +9,18 @@ CREATE TABLE "User" (
 );
 
 -- CreateTable
-CREATE TABLE "Todo" (
+CREATE TABLE "Greeting" (
     "id" SERIAL NOT NULL,
     "authorId" INTEGER NOT NULL,
-    "description" TEXT NOT NULL,
-    "isComplete" BOOLEAN NOT NULL DEFAULT false,
+    "title" TEXT NOT NULL,
+    "comment" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT "Todo_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "Greeting_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateIndex
+CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
+
 -- AddForeignKey
-ALTER TABLE "Todo" ADD CONSTRAINT "Todo_authorId_fkey" FOREIGN KEY ("authorId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Greeting" ADD CONSTRAINT "Greeting_authorId_fkey" FOREIGN KEY ("authorId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

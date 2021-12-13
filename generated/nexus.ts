@@ -5,8 +5,57 @@
 
 
 import type { ContextType } from "./../schema/index"
-
-
+import type { core } from "nexus"
+declare global {
+  interface NexusGenCustomInputMethods<TypeName extends string> {
+    /**
+     * The `BigInt` scalar type represents non-fractional signed whole numeric values.
+     * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/BigInt
+     */
+    bigInt<FieldName extends string>(fieldName: FieldName, opts?: core.CommonInputFieldConfig<TypeName, FieldName>): void // "BigInt";
+    /**
+     * The `Byte` scalar type represents byte value as a Buffer
+     */
+    bytes<FieldName extends string>(fieldName: FieldName, opts?: core.CommonInputFieldConfig<TypeName, FieldName>): void // "Bytes";
+    /**
+     * A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
+     */
+    dateTime<FieldName extends string>(fieldName: FieldName, opts?: core.CommonInputFieldConfig<TypeName, FieldName>): void // "DateTime";
+    /**
+     * An arbitrary-precision Decimal type
+     */
+    decimal<FieldName extends string>(fieldName: FieldName, opts?: core.CommonInputFieldConfig<TypeName, FieldName>): void // "Decimal";
+    /**
+     * The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+     */
+    json<FieldName extends string>(fieldName: FieldName, opts?: core.CommonInputFieldConfig<TypeName, FieldName>): void // "Json";
+  }
+}
+declare global {
+  interface NexusGenCustomOutputMethods<TypeName extends string> {
+    /**
+     * The `BigInt` scalar type represents non-fractional signed whole numeric values.
+     * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/BigInt
+     */
+    bigInt<FieldName extends string>(fieldName: FieldName, ...opts: core.ScalarOutSpread<TypeName, FieldName>): void // "BigInt";
+    /**
+     * The `Byte` scalar type represents byte value as a Buffer
+     */
+    bytes<FieldName extends string>(fieldName: FieldName, ...opts: core.ScalarOutSpread<TypeName, FieldName>): void // "Bytes";
+    /**
+     * A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
+     */
+    dateTime<FieldName extends string>(fieldName: FieldName, ...opts: core.ScalarOutSpread<TypeName, FieldName>): void // "DateTime";
+    /**
+     * An arbitrary-precision Decimal type
+     */
+    decimal<FieldName extends string>(fieldName: FieldName, ...opts: core.ScalarOutSpread<TypeName, FieldName>): void // "Decimal";
+    /**
+     * The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+     */
+    json<FieldName extends string>(fieldName: FieldName, ...opts: core.ScalarOutSpread<TypeName, FieldName>): void // "Json";
+  }
+}
 
 
 declare global {
@@ -14,23 +63,22 @@ declare global {
 }
 
 export interface NexusGenInputs {
-  CompleteTodoInput: { // input type
-    id: number; // Int!
+  CreateGreetingInput: { // input type
+    comment: string; // String!
+    title: string; // String!
   }
   CreateOrUpdateUserInput: { // input type
     email: string; // String!
     image?: string | null; // String
     name: string; // String!
   }
-  CreateTodoInput: { // input type
-    description: string; // String!
-  }
-  DeleteTodoInput: { // input type
+  DeleteGreetingInput: { // input type
     id: number; // Int!
   }
-  EditTodoInput: { // input type
-    description: string; // String!
+  EditGreetingInput: { // input type
+    comment: string; // String!
     id: number; // Int!
+    title: string; // String!
   }
   GetUserInput: { // input type
     email: string; // String!
@@ -46,16 +94,22 @@ export interface NexusGenScalars {
   Float: number
   Boolean: boolean
   ID: string
+  BigInt: any
+  Bytes: any
+  DateTime: any
+  Decimal: any
+  Json: any
 }
 
 export interface NexusGenObjects {
+  Greeting: { // root type
+    comment: string; // String!
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
+    id: number; // Int!
+    title: string; // String!
+  }
   Mutation: {};
   Query: {};
-  Todo: { // root type
-    description: string; // String!
-    id: number; // Int!
-    isComplete: boolean; // Boolean!
-  }
   User: { // root type
     email: string; // String!
     id: number; // Int!
@@ -75,22 +129,22 @@ export type NexusGenRootTypes = NexusGenObjects
 export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars
 
 export interface NexusGenFieldTypes {
+  Greeting: { // field return type
+    author: NexusGenRootTypes['User']; // User!
+    comment: string; // String!
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
+    id: number; // Int!
+    title: string; // String!
+  }
   Mutation: { // field return type
-    completeTodo: NexusGenRootTypes['Todo'] | null; // Todo
+    createGreeting: NexusGenRootTypes['Greeting'] | null; // Greeting
     createOrUpdateUser: NexusGenRootTypes['User'] | null; // User
-    createTodo: NexusGenRootTypes['Todo'] | null; // Todo
-    deleteTodo: NexusGenRootTypes['Todo'] | null; // Todo
-    editTodo: NexusGenRootTypes['Todo'] | null; // Todo
+    deleteGreeting: NexusGenRootTypes['Greeting'] | null; // Greeting
+    editGreeting: NexusGenRootTypes['Greeting'] | null; // Greeting
   }
   Query: { // field return type
-    todos: NexusGenRootTypes['Todo'][]; // [Todo!]!
+    greetings: NexusGenRootTypes['Greeting'][]; // [Greeting!]!
     user: NexusGenRootTypes['User']; // User!
-  }
-  Todo: { // field return type
-    author: NexusGenRootTypes['User']; // User!
-    description: string; // String!
-    id: number; // Int!
-    isComplete: boolean; // Boolean!
   }
   User: { // field return type
     email: string; // String!
@@ -101,22 +155,22 @@ export interface NexusGenFieldTypes {
 }
 
 export interface NexusGenFieldTypeNames {
+  Greeting: { // field return type name
+    author: 'User'
+    comment: 'String'
+    createdAt: 'DateTime'
+    id: 'Int'
+    title: 'String'
+  }
   Mutation: { // field return type name
-    completeTodo: 'Todo'
+    createGreeting: 'Greeting'
     createOrUpdateUser: 'User'
-    createTodo: 'Todo'
-    deleteTodo: 'Todo'
-    editTodo: 'Todo'
+    deleteGreeting: 'Greeting'
+    editGreeting: 'Greeting'
   }
   Query: { // field return type name
-    todos: 'Todo'
+    greetings: 'Greeting'
     user: 'User'
-  }
-  Todo: { // field return type name
-    author: 'User'
-    description: 'String'
-    id: 'Int'
-    isComplete: 'Boolean'
   }
   User: { // field return type name
     email: 'String'
@@ -128,20 +182,17 @@ export interface NexusGenFieldTypeNames {
 
 export interface NexusGenArgTypes {
   Mutation: {
-    completeTodo: { // args
-      input: NexusGenInputs['CompleteTodoInput']; // CompleteTodoInput!
+    createGreeting: { // args
+      input: NexusGenInputs['CreateGreetingInput']; // CreateGreetingInput!
     }
     createOrUpdateUser: { // args
       input: NexusGenInputs['CreateOrUpdateUserInput']; // CreateOrUpdateUserInput!
     }
-    createTodo: { // args
-      input: NexusGenInputs['CreateTodoInput']; // CreateTodoInput!
+    deleteGreeting: { // args
+      input: NexusGenInputs['DeleteGreetingInput']; // DeleteGreetingInput!
     }
-    deleteTodo: { // args
-      input: NexusGenInputs['DeleteTodoInput']; // DeleteTodoInput!
-    }
-    editTodo: { // args
-      input: NexusGenInputs['EditTodoInput']; // EditTodoInput!
+    editGreeting: { // args
+      input: NexusGenInputs['EditGreetingInput']; // EditGreetingInput!
     }
   }
   Query: {

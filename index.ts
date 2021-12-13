@@ -36,7 +36,7 @@ const server = new ApolloServer({
 });
 
 server
-  .listen(8080)
+  .listen(4000)
   .then(({ url }: { url: string }) =>
     console.log(`Server started successfully on ${url}`)
   );
