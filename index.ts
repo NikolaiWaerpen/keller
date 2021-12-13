@@ -9,13 +9,17 @@ const server = new ApolloServer({
   context: async ({ req, res }) => {
     const requestUser = req.headers.from;
 
-    const user = await prisma.user.findFirst({
-      where: {
-        email: requestUser,
-      },
-    });
-
-    if (!user) throw new AuthenticationError("you are not authenticated");
+    let user;
+    try {
+      user = await prisma.user.findUnique({
+        where: {
+          email: requestUser,
+        },
+      });
+    } catch (error) {
+      if (!user) throw new AuthenticationError("you are not authenticated");
+      console.log(error);
+    }
 
     return { prisma, user };
   },
