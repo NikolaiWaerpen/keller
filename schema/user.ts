@@ -29,7 +29,7 @@ export const userQuery = extendType({
     t.nonNull.field("user", {
       type: $name,
       args: { input: nonNull(arg({ type: getUserInput.name })) },
-      resolve: async (_, args) => {
+      resolve: async (_, args, ctx) => {
         const { email } = args.input;
 
         return await prisma.user.findFirst({

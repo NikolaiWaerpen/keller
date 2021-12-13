@@ -1,11 +1,15 @@
+import { PrismaClient } from "@prisma/client";
 import { ApolloError } from "apollo-server-errors";
-import { extendType, inputObjectType, objectType } from "nexus";
+import { arg, extendType, inputObjectType, nonNull, objectType } from "nexus";
 import { Todo } from "nexus-prisma";
-import { prisma } from "../index";
 
-const { $name, id, description, isComplete } = Todo;
+const { $name, id, description, isComplete, author } = Todo;
 
-const checkForExistingTodo = async (id: number, returnFoundTodo?: boolean) => {
+const checkForExistingTodo = async (
+  id: number,
+  prisma: PrismaClient,
+  returnFoundTodo?: boolean
+) => {
   const todo = await prisma.todo.findUnique({ where: { id } });
   if (!todo) throw new ApolloError(`A todo with id '${id}' was not found'`);
   if (returnFoundTodo) return todo;
@@ -19,6 +23,7 @@ export const todoObjectType = objectType({
     t.field(id);
     t.field(description);
     t.field(isComplete);
+    t.field(author);
   },
 });
 
@@ -27,7 +32,7 @@ export const todoQuery = extendType({
   definition: (t) => {
     t.nonNull.list.nonNull.field("todos", {
       type: $name,
-      resolve: () => prisma.todo.findMany(),
+      resolve: async (_, __, { prisma }) => await prisma.todo.findMany(),
     });
   },
 });
@@ -63,67 +68,71 @@ export const deleteTodoInput = inputObjectType({
   },
 });
 
-// export const todoMutation = extendType({
-//   type: "Mutation",
-//   definition: (t) => {
-//     t.field("createTodo", {
-//       type: $name,
-//       args: { input: nonNull(arg({ type: createTodoInput.name })) },
-//       resolve: async (_, args) => {
-//         const { description } = args.input;
+export const todoMutation = extendType({
+  type: "Mutation",
+  definition: (t) => {
+    t.field("createTodo", {
+      type: $name,
+      args: { input: nonNull(arg({ type: createTodoInput.name })) },
+      resolve: async (_, { input: { description } }, context) => {
+        const {
+          prisma,
+          user: { id },
+        } = context;
 
-//         return await prisma.todo.create({
-//           data: {
-//             description,
-//           },
-//         });
-//       },
-//     });
+        return await prisma.todo.create({
+          data: {
+            description,
+            author: {
+              connect: {
+                id,
+              },
+            },
+          },
+        });
+      },
+    });
 
-//     t.field("editTodo", {
-//       type: $name,
-//       args: { input: nonNull(arg({ type: editTodoInput.name })) },
-//       resolve: async (_, args) => {
-//         const { id, description } = args.input;
+    t.field("editTodo", {
+      type: $name,
+      args: { input: nonNull(arg({ type: editTodoInput.name })) },
+      resolve: async (_, args, { prisma }) => {
+        const { id, description } = args.input;
 
-//         await checkForExistingTodo(id);
+        await checkForExistingTodo(id, prisma);
 
-//         return await prisma.todo.update({
-//           where: { id },
-//           data: {
-//             description,
-//           },
-//         });
-//       },
-//     });
+        return await prisma.todo.update({
+          where: { id },
+          data: {
+            description,
+          },
+        });
+      },
+    });
 
-//     t.field("completeTodo", {
-//       type: $name,
-//       args: { input: nonNull(arg({ type: completeTodoInput.name })) },
-//       resolve: async (_, args) => {
-//         const { id } = args.input;
+    t.field("completeTodo", {
+      type: $name,
+      args: { input: nonNull(arg({ type: completeTodoInput.name })) },
+      resolve: async (_, { input: { id } }, { prisma }) => {
+        const foundTodo = await checkForExistingTodo(id, prisma, true);
 
-//         const foundTodo = await checkForExistingTodo(id, true);
+        return await prisma.todo.update({
+          where: { id },
+          data: {
+            isComplete: !foundTodo!.isComplete,
+          },
+        });
+      },
+    });
 
-//         return await prisma.todo.update({
-//           where: { id },
-//           data: {
-//             isComplete: !foundTodo?.isComplete,
-//           },
-//         });
-//       },
-//     });
+    t.field("deleteTodo", {
+      type: $name,
+      args: { input: nonNull(arg({ type: deleteTodoInput.name })) },
+      resolve: async (_, { input: { id } }, { prisma }) => {
+        await checkForExistingTodo(id, prisma);
 
-//     t.field("deleteTodo", {
-//       type: $name,
-//       args: { input: nonNull(arg({ type: deleteTodoInput.name })) },
-//       resolve: async (_, args) => {
-//         const { id } = args.input;
-
-//         await checkForExistingTodo(id);
-
-//         return await prisma.todo.delete({ where: { id } });
-//       },
-//     });
-//   },
-// });
+        return await prisma.todo.delete({ where: { id } });
+      },
+    });
+  },
+});
