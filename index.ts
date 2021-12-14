@@ -4,39 +4,70 @@ import { schema } from "./schema";
 
 export const prisma = new PrismaClient();
 
-function findUser() {}
+type User = {
+  id?: number;
+  name: string;
+  email: string;
+  image?: string;
+};
+
+async function createOrUpdateUser({ id, name, email, image }: User) {
+  return await prisma.user.upsert({
+    where: {
+      email,
+    },
+    update: {
+      name,
+      email,
+      image,
+    },
+    create: {
+      name,
+      email,
+      image,
+    },
+  });
+}
 
 const server = new ApolloServer({
   schema,
   context: async ({ req }) => {
-    const requestUser = req.headers.from,
+    const reqUser = req.headers.from?.split(","),
       isDevelopment = process.env.NODE_ENV === "development";
 
-    if (!requestUser && !isDevelopment)
+    if (!reqUser && !isDevelopment)
       throw new AuthenticationError("you are not authenticated");
 
-    if (requestUser) {
-      const user = await prisma.user.findUnique({
-        where: {
-          email: requestUser,
-        },
-      });
+    if (!reqUser && isDevelopment) {
+      // RUNS ON GraphQL playground, not performant, but is only relevant in playground
+      const birb = {
+        name: "Birb",
+        email: "birb@kurzgesagt.com",
+      };
+      const user = await createOrUpdateUser(birb);
 
       return { prisma, user };
     }
 
-    // GraphQL playground
-    else if (!requestUser && isDevelopment) {
-      // TODO: create or update prisma user read on upsert
-      const user = {};
+    if (reqUser!.length !== 3 && !isDevelopment)
+      throw new AuthenticationError(
+        "proper user credentials not passed in header"
+      );
 
-      return { prisma, user };
-    }
+    const reqUserFormatted = {
+      email: reqUser![0],
+      name: reqUser![1],
+      image: reqUser![2],
+    };
+
+    const user = await createOrUpdateUser(reqUserFormatted);
+
+    return { prisma, user };
   },
 });
 
 server
   .listen(4000)
   .then(({ url }: { url: string }) =>
-    console.log(`Server started successfully on ${url}`)
+    console.log(`server started successfully on ${url}`)
   );

@@ -1,6 +1,5 @@
 import { arg, extendType, inputObjectType, nonNull, objectType } from "nexus";
 import { User } from "nexus-prisma";
-import { prisma } from "..";
 
 const { $name, id, name, email, image } = User;
 
@@ -29,10 +28,10 @@ export const userQuery = extendType({
     t.nonNull.field("user", {
       type: $name,
       args: { input: nonNull(arg({ type: getUserInput.name })) },
-      resolve: async (_, args, ctx) => {
+      resolve: async (_, args, { prisma }) => {
         const { email } = args.input;
 
-        return await prisma.user.findFirst({
+        return await prisma.user.findUnique({
           where: {
             email,
           },
@@ -59,7 +58,7 @@ export const userMutation = extendType({
     t.field("createOrUpdateUser", {
       type: $name,
       args: { input: nonNull(arg({ type: createOrUpdateUserInput.name })) },
-      resolve: async (_, args) => {
+      resolve: async (_, args, { prisma }) => {
         const { name, email, image } = args.input;
 
         const userExists = await prisma.user.findFirst({
