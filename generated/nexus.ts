@@ -67,11 +67,6 @@ export interface NexusGenInputs {
     comment: string; // String!
     title: string; // String!
   }
-  CreateOrUpdateUserInput: { // input type
-    email: string; // String!
-    image?: string | null; // String
-    name: string; // String!
-  }
   DeleteGreetingInput: { // input type
     id: number; // Int!
   }
@@ -79,9 +74,6 @@ export interface NexusGenInputs {
     comment: string; // String!
     id: number; // Int!
     title: string; // String!
-  }
-  GetUserInput: { // input type
-    email: string; // String!
   }
 }
 
@@ -138,13 +130,11 @@ export interface NexusGenFieldTypes {
   }
   Mutation: { // field return type
     createGreeting: NexusGenRootTypes['Greeting'] | null; // Greeting
-    createOrUpdateUser: NexusGenRootTypes['User'] | null; // User
     deleteGreeting: NexusGenRootTypes['Greeting'] | null; // Greeting
     editGreeting: NexusGenRootTypes['Greeting'] | null; // Greeting
   }
   Query: { // field return type
     greetings: NexusGenRootTypes['Greeting'][]; // [Greeting!]!
-    user: NexusGenRootTypes['User']; // User!
   }
   User: { // field return type
     email: string; // String!
@@ -164,13 +154,11 @@ export interface NexusGenFieldTypeNames {
   }
   Mutation: { // field return type name
     createGreeting: 'Greeting'
-    createOrUpdateUser: 'User'
     deleteGreeting: 'Greeting'
     editGreeting: 'Greeting'
   }
   Query: { // field return type name
     greetings: 'Greeting'
-    user: 'User'
   }
   User: { // field return type name
     email: 'String'
@@ -185,19 +173,11 @@ export interface NexusGenArgTypes {
     createGreeting: { // args
       input: NexusGenInputs['CreateGreetingInput']; // CreateGreetingInput!
     }
-    createOrUpdateUser: { // args
-      input: NexusGenInputs['CreateOrUpdateUserInput']; // CreateOrUpdateUserInput!
-    }
     deleteGreeting: { // args
       input: NexusGenInputs['DeleteGreetingInput']; // DeleteGreetingInput!
     }
     editGreeting: { // args
       input: NexusGenInputs['EditGreetingInput']; // EditGreetingInput!
-    }
-  }
-  Query: {
-    user: { // args
-      input: NexusGenInputs['GetUserInput']; // GetUserInput!
     }
   }
 }
