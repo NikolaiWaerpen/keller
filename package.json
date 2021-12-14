@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "docker-compose up -d; npx prisma migrate dev; npx prisma generate; tsnd --respawn --transpile-only index.ts",
-    "start": "tsnd --respawn --transpile-only index.ts",
+    "start": "tsc && node dist/index.js",
     "prisma:generate": "npx prisma generate",
     "prisma:format": "npx prisma format",
     "prisma:migrate": "npx prisma migrate dev",
