@@ -1,6 +1,7 @@
 # FROM node:14.16.0-alpine
 #FROM node:16-alpine3.14
 FROM node:16-alpine
+RUN apk add --no-cache git
 WORKDIR /app
 RUN chown -R root:root /app && chmod -R 771 /app
 COPY package.json .
