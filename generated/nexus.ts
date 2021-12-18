@@ -100,9 +100,11 @@ export interface NexusGenScalars {
 export interface NexusGenObjects {
   Asset: { // root type
     description?: string | null; // String
+    imagePreviewUrl?: string | null; // String
     imageUrl?: string | null; // String
-    imageUrlThumbnail?: string | null; // String
     name?: string | null; // String
+    tokenAddress?: string | null; // String
+    tokenId?: string | null; // String
   }
   Greeting: { // root type
     comment: string; // String!
@@ -133,9 +135,11 @@ export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars
 export interface NexusGenFieldTypes {
   Asset: { // field return type
     description: string | null; // String
+    imagePreviewUrl: string | null; // String
     imageUrl: string | null; // String
-    imageUrlThumbnail: string | null; // String
     name: string | null; // String
+    tokenAddress: string | null; // String
+    tokenId: string | null; // String
   }
   Greeting: { // field return type
     author: NexusGenRootTypes['User']; // User!
@@ -165,9 +169,11 @@ export interface NexusGenFieldTypes {
 export interface NexusGenFieldTypeNames {
   Asset: { // field return type name
     description: 'String'
+    imagePreviewUrl: 'String'
     imageUrl: 'String'
-    imageUrlThumbnail: 'String'
     name: 'String'
+    tokenAddress: 'String'
+    tokenId: 'String'
   }
   Greeting: { // field return type name
     author: 'User'

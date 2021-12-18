@@ -1,14 +1,38 @@
 import { seaport } from "../../lib/seaport";
 import { arg, extendType, inputObjectType, nonNull, objectType } from "nexus";
 
+// export const User = objectType({
+//   name: "User",
+//   definition: (t) => {
+//     t.string("username")
+//   }
+// })
+
+// export const Owner = objectType({
+//   name: "Owner",
+//   definition: (t) => {
+//     t.field("user", {
+//       type: ""
+//     })
+//   }
+// })
+
 export const Asset = objectType({
   name: "Asset",
-  definition(t) {
-    t.string("name");
+  definition: (t) => {
+    t.string("tokenId");
+    t.string("tokenAddress");
+    // t.field("owner", {
+    //   type: Owner.name,
+    //   resolve: (t) => {
+    //     t.field("")
+    //   }
+    // };
+
     t.string("name");
     t.string("description");
     t.string("imageUrl");
-    t.string("imageUrlThumbnail");
+    t.string("imagePreviewUrl");
   },
 });
 
