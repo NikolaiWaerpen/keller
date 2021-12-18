@@ -12,8 +12,6 @@ const checkForExistingGreeting = async (id: number, prisma: PrismaClient) => {
   return greeting;
 };
 
-// QUERIES
-
 export const greetingObjectType = objectType({
   name: $name,
   definition(t) {
@@ -24,6 +22,8 @@ export const greetingObjectType = objectType({
     t.field(author);
   },
 });
+
+// QUERIES
 
 export const greetingQuery = extendType({
   type: "Query",

@@ -94,6 +94,12 @@ export interface NexusGenScalars {
 }
 
 export interface NexusGenObjects {
+  Asset: { // root type
+    description?: string | null; // String
+    imageUrl?: string | null; // String
+    imageUrlThumbnail?: string | null; // String
+    name?: string | null; // String
+  }
   Greeting: { // root type
     comment: string; // String!
     createdAt: NexusGenScalars['DateTime']; // DateTime!
@@ -121,6 +127,12 @@ export type NexusGenRootTypes = NexusGenObjects
 export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars
 
 export interface NexusGenFieldTypes {
+  Asset: { // field return type
+    description: string | null; // String
+    imageUrl: string | null; // String
+    imageUrlThumbnail: string | null; // String
+    name: string | null; // String
+  }
   Greeting: { // field return type
     author: NexusGenRootTypes['User']; // User!
     comment: string; // String!
@@ -134,6 +146,7 @@ export interface NexusGenFieldTypes {
     editGreeting: NexusGenRootTypes['Greeting'] | null; // Greeting
   }
   Query: { // field return type
+    assets: Array<NexusGenRootTypes['Asset'] | null> | null; // [Asset]
     greetings: NexusGenRootTypes['Greeting'][]; // [Greeting!]!
   }
   User: { // field return type
@@ -145,6 +158,12 @@ export interface NexusGenFieldTypes {
 }
 
 export interface NexusGenFieldTypeNames {
+  Asset: { // field return type name
+    description: 'String'
+    imageUrl: 'String'
+    imageUrlThumbnail: 'String'
+    name: 'String'
+  }
   Greeting: { // field return type name
     author: 'User'
     comment: 'String'
@@ -158,6 +177,7 @@ export interface NexusGenFieldTypeNames {
     editGreeting: 'Greeting'
   }
   Query: { // field return type name
+    assets: 'Asset'
     greetings: 'Greeting'
   }
   User: { // field return type name
