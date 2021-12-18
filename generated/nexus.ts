@@ -75,6 +75,10 @@ export interface NexusGenInputs {
     id: number; // Int!
     title: string; // String!
   }
+  GetAssetInput: { // input type
+    tokenAddress: string; // String!
+    tokenId: string; // String!
+  }
 }
 
 export interface NexusGenEnums {
@@ -146,6 +150,7 @@ export interface NexusGenFieldTypes {
     editGreeting: NexusGenRootTypes['Greeting'] | null; // Greeting
   }
   Query: { // field return type
+    asset: NexusGenRootTypes['Asset'] | null; // Asset
     assets: Array<NexusGenRootTypes['Asset'] | null> | null; // [Asset]
     greetings: NexusGenRootTypes['Greeting'][]; // [Greeting!]!
   }
@@ -177,6 +182,7 @@ export interface NexusGenFieldTypeNames {
     editGreeting: 'Greeting'
   }
   Query: { // field return type name
+    asset: 'Asset'
     assets: 'Asset'
     greetings: 'Greeting'
   }
@@ -198,6 +204,11 @@ export interface NexusGenArgTypes {
     }
     editGreeting: { // args
       input: NexusGenInputs['EditGreetingInput']; // EditGreetingInput!
+    }
+  }
+  Query: {
+    asset: { // args
+      input: NexusGenInputs['GetAssetInput']; // GetAssetInput!
     }
   }
 }
