@@ -46,6 +46,13 @@ export const getAssetInput = inputObjectType({
   },
 });
 
+export const getAssetsInput = inputObjectType({
+  name: "GetAssetsInput",
+  definition: (t) => {
+    t.nonNull.string("owner");
+  },
+});
+
 export const assetQuery = extendType({
   type: "Query",
   definition: (t) => {
@@ -66,9 +73,14 @@ export const assetQuery = extendType({
     });
     t.list.field("assets", {
       type: "Asset",
-      resolve: async () => {
+      args: { input: nonNull(arg({ type: getAssetsInput.name })) },
+      resolve: async (_, args) => {
+        const {
+          input: { owner },
+        } = args;
+
         const { assets } = await seaport.api.getAssets({
-          owner: "0x9f24d0572b848a6771b441f5a58702c047f7556f",
+          owner,
           limit: 50,
         });
 

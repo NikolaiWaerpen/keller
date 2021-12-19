@@ -79,6 +79,9 @@ export interface NexusGenInputs {
     tokenAddress: string; // String!
     tokenId: string; // String!
   }
+  GetAssetsInput: { // input type
+    owner: string; // String!
+  }
 }
 
 export interface NexusGenEnums {
@@ -215,6 +218,9 @@ export interface NexusGenArgTypes {
   Query: {
     asset: { // args
       input: NexusGenInputs['GetAssetInput']; // GetAssetInput!
+    }
+    assets: { // args
+      input: NexusGenInputs['GetAssetsInput']; // GetAssetsInput!
     }
   }
 }
