@@ -1,7 +1,8 @@
+import { ApolloError } from "apollo-server";
 import { arg, extendType, inputObjectType, nonNull, objectType } from "nexus";
 import { User } from "nexus-prisma";
 
-const { $name, id, name, email, image } = User;
+const { $name, id, name, email, image, publicAddress } = User;
 
 export const userObjectType = objectType({
   name: $name,
@@ -10,91 +11,71 @@ export const userObjectType = objectType({
     t.field(name);
     t.field(email);
     t.field(image);
+    t.field(publicAddress);
   },
 });
 
 // QUERY
 
-// export const getUserInput = inputObjectType({
-//   name: "GetUserInput",
-//   definition: (t) => {
-//     t.nonNull.string(email.name);
-//   },
-// });
+export const getUserInput = inputObjectType({
+  name: "GetUserInput",
+  definition: (t) => {
+    t.nonNull.string(email.name);
+  },
+});
 
-// export const userQuery = extendType({
-//   type: "Query",
-//   definition: (t) => {
-//     t.nonNull.field("user", {
-//       type: $name,
-//       args: { input: nonNull(arg({ type: getUserInput.name })) },
-//       resolve: async (_, args, { prisma }) => {
-//         const { email } = args.input;
+export const userQuery = extendType({
+  type: "Query",
+  definition: (t) => {
+    t.nonNull.field("user", {
+      type: $name,
+      args: { input: nonNull(arg({ type: getUserInput.name })) },
+      resolve: async (_, args, { prisma }) => {
+        const { email } = args.input;
 
-//         return await prisma.user.findUnique({
-//           where: {
-//             email,
-//           },
-//         });
-//       },
-//     });
-//   },
-// });
+        const foundUser = await prisma.user.findUnique({
+          where: {
+            email,
+          },
+        });
+
+        if (!foundUser)
+          throw new ApolloError(`A user with email '${email}' was not found'`);
+
+        return foundUser;
+      },
+    });
+  },
+});
 
 // MUTATION
 
-// export const createOrUpdateUserInput = inputObjectType({
-//   name: "CreateOrUpdateUserInput",
-//   definition: (t) => {
-//     t.string(image.name);
-//     t.nonNull.string(name.name);
-//     t.nonNull.string(email.name);
-//   },
-// });
+export const updatePublicAddressInput = inputObjectType({
+  name: "UpdatePublicAddressInput",
+  definition: (t) => {
+    t.nonNull.string("email");
+    t.nonNull.string("publicAddress");
+  },
+});
 
-// export const userMutation = extendType({
-//   type: "Mutation",
-//   definition: (t) => {
-//     t.field("createOrUpdateUser", {
-//       type: $name,
-//       args: { input: nonNull(arg({ type: createOrUpdateUserInput.name })) },
-//       resolve: async (_, args, { prisma }) => {
-//         const { name, email, image } = args.input;
+export const userMutation = extendType({
+  type: "Mutation",
+  definition: (t) => {
+    t.field("updatePublicAddress", {
+      type: $name,
+      args: { input: nonNull(arg({ type: updatePublicAddressInput.name })) },
+      resolve: async (_, args, { prisma }) => {
+        const { email, publicAddress } = args.input;
 
-//         const userExists = await prisma.user.findFirst({
-//           where: {
-//             email,
-//           },
-//         });
-
-//         if (userExists)
-//           return await prisma.user.update({
-//             data: {
-//               name,
-//               email,
-//               image,
-//             },
-//             where: {
-//               id: userExists.id,
-//             },
-//           });
-
-//         if (image)
-//           return await prisma.user.create({
-//             data: {
-//               name,
-//               email,
-//               image,
-//             },
-//           });
-
-//         return await prisma.user.create({
-//           data: {
-//             name,
-//             email,
-//           },
-//         });
-//       },
-//     });
-//   },
-// });
+        return await prisma.user.update({
+          where: {
+            email,
+          },
+          data: {
+            publicAddress,
+          },
+        });
+      },
+    });
+  },
+});

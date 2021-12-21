@@ -82,6 +82,13 @@ export interface NexusGenInputs {
   GetAssetsInput: { // input type
     owner: string; // String!
   }
+  GetUserInput: { // input type
+    email: string; // String!
+  }
+  UpdatePublicAddressInput: { // input type
+    email: string; // String!
+    publicAddress: string; // String!
+  }
 }
 
 export interface NexusGenEnums {
@@ -122,6 +129,7 @@ export interface NexusGenObjects {
     id: number; // Int!
     image: string; // String!
     name: string; // String!
+    publicAddress?: string | null; // String
   }
 }
 
@@ -155,17 +163,20 @@ export interface NexusGenFieldTypes {
     createGreeting: NexusGenRootTypes['Greeting'] | null; // Greeting
     deleteGreeting: NexusGenRootTypes['Greeting'] | null; // Greeting
     editGreeting: NexusGenRootTypes['Greeting'] | null; // Greeting
+    updatePublicAddress: NexusGenRootTypes['User'] | null; // User
   }
   Query: { // field return type
     asset: NexusGenRootTypes['Asset'] | null; // Asset
     assets: Array<NexusGenRootTypes['Asset'] | null> | null; // [Asset]
     greetings: NexusGenRootTypes['Greeting'][]; // [Greeting!]!
+    user: NexusGenRootTypes['User']; // User!
   }
   User: { // field return type
     email: string; // String!
     id: number; // Int!
     image: string; // String!
     name: string; // String!
+    publicAddress: string | null; // String
   }
 }
 
@@ -189,17 +200,20 @@ export interface NexusGenFieldTypeNames {
     createGreeting: 'Greeting'
     deleteGreeting: 'Greeting'
     editGreeting: 'Greeting'
+    updatePublicAddress: 'User'
   }
   Query: { // field return type name
     asset: 'Asset'
     assets: 'Asset'
     greetings: 'Greeting'
+    user: 'User'
   }
   User: { // field return type name
     email: 'String'
     id: 'Int'
     image: 'String'
     name: 'String'
+    publicAddress: 'String'
   }
 }
 
@@ -214,6 +228,9 @@ export interface NexusGenArgTypes {
     editGreeting: { // args
       input: NexusGenInputs['EditGreetingInput']; // EditGreetingInput!
     }
+    updatePublicAddress: { // args
+      input: NexusGenInputs['UpdatePublicAddressInput']; // UpdatePublicAddressInput!
+    }
   }
   Query: {
     asset: { // args
@@ -221,6 +238,9 @@ export interface NexusGenArgTypes {
     }
     assets: { // args
       input: NexusGenInputs['GetAssetsInput']; // GetAssetsInput!
+    }
+    user: { // args
+      input: NexusGenInputs['GetUserInput']; // GetUserInput!
     }
   }
 }
