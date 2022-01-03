@@ -75,13 +75,6 @@ export interface NexusGenInputs {
     id: number; // Int!
     title: string; // String!
   }
-  GetAssetInput: { // input type
-    tokenAddress: string; // String!
-    tokenId: string; // String!
-  }
-  GetAssetsInput: { // input type
-    owner: string; // String!
-  }
   GetUserInput: { // input type
     email: string; // String!
   }
@@ -108,14 +101,6 @@ export interface NexusGenScalars {
 }
 
 export interface NexusGenObjects {
-  Asset: { // root type
-    description?: string | null; // String
-    imagePreviewUrl?: string | null; // String
-    imageUrl?: string | null; // String
-    name?: string | null; // String
-    tokenAddress?: string | null; // String
-    tokenId?: string | null; // String
-  }
   Greeting: { // root type
     comment: string; // String!
     createdAt: NexusGenScalars['DateTime']; // DateTime!
@@ -144,14 +129,6 @@ export type NexusGenRootTypes = NexusGenObjects
 export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars
 
 export interface NexusGenFieldTypes {
-  Asset: { // field return type
-    description: string | null; // String
-    imagePreviewUrl: string | null; // String
-    imageUrl: string | null; // String
-    name: string | null; // String
-    tokenAddress: string | null; // String
-    tokenId: string | null; // String
-  }
   Greeting: { // field return type
     author: NexusGenRootTypes['User']; // User!
     comment: string; // String!
@@ -166,8 +143,6 @@ export interface NexusGenFieldTypes {
     updatePublicAddress: NexusGenRootTypes['User'] | null; // User
   }
   Query: { // field return type
-    asset: NexusGenRootTypes['Asset'] | null; // Asset
-    assets: Array<NexusGenRootTypes['Asset'] | null> | null; // [Asset]
     greetings: NexusGenRootTypes['Greeting'][]; // [Greeting!]!
     user: NexusGenRootTypes['User']; // User!
   }
@@ -181,14 +156,6 @@ export interface NexusGenFieldTypes {
 }
 
 export interface NexusGenFieldTypeNames {
-  Asset: { // field return type name
-    description: 'String'
-    imagePreviewUrl: 'String'
-    imageUrl: 'String'
-    name: 'String'
-    tokenAddress: 'String'
-    tokenId: 'String'
-  }
   Greeting: { // field return type name
     author: 'User'
     comment: 'String'
@@ -203,8 +170,6 @@ export interface NexusGenFieldTypeNames {
     updatePublicAddress: 'User'
   }
   Query: { // field return type name
-    asset: 'Asset'
-    assets: 'Asset'
     greetings: 'Greeting'
     user: 'User'
   }
@@ -233,12 +198,6 @@ export interface NexusGenArgTypes {
     }
   }
   Query: {
-    asset: { // args
-      input: NexusGenInputs['GetAssetInput']; // GetAssetInput!
-    }
-    assets: { // args
-      input: NexusGenInputs['GetAssetsInput']; // GetAssetsInput!
-    }
     user: { // args
       input: NexusGenInputs['GetUserInput']; // GetUserInput!
     }

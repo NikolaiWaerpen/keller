@@ -4,7 +4,6 @@ import NexusPrismaScalars from "nexus-prisma/scalars";
 import path from "path";
 import * as greeting from "./greeting";
 import * as user from "./user";
-import * as asset from "./nft/asset";
 
 export type ContextType = {
   prisma: PrismaClient;
@@ -16,10 +15,8 @@ export type ContextType = {
   };
 };
 
-const nft = [asset];
-
 export const schema = makeSchema({
-  types: [NexusPrismaScalars, greeting, user, ...nft],
+  types: [NexusPrismaScalars, greeting, user],
   outputs: {
     typegen: path.join(process.cwd(), "generated/nexus.ts"),
   },
