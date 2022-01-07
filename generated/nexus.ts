@@ -145,6 +145,7 @@ export interface NexusGenFieldTypes {
   Query: { // field return type
     greetings: NexusGenRootTypes['Greeting'][]; // [Greeting!]!
     user: NexusGenRootTypes['User']; // User!
+    users: NexusGenRootTypes['User'][]; // [User!]!
   }
   User: { // field return type
     email: string; // String!
@@ -172,6 +173,7 @@ export interface NexusGenFieldTypeNames {
   Query: { // field return type name
     greetings: 'Greeting'
     user: 'User'
+    users: 'User'
   }
   User: { // field return type name
     email: 'String'

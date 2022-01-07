@@ -45,6 +45,16 @@ export const userQuery = extendType({
         return foundUser;
       },
     });
+    t.nonNull.list.nonNull.field("users", {
+      type: $name,
+      resolve: async (_, __, { prisma }) => {
+        const users = await prisma.user.findMany();
+
+        if (!users) throw new ApolloError(`A users not found'`);
+
+        return users;
+      },
+    });
   },
 });
 
