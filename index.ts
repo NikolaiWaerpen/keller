@@ -29,17 +29,21 @@ async function createOrUpdateUser({ id, name, email, image }: User) {
   });
 }
 
+// TODO: Authentication on specific endpoints - such as creating a greeting
+
 const server = new ApolloServer({
   schema,
   context: async ({ req }) => {
     const reqUser = req.headers.from?.split(","),
       isDevelopment = process.env.NODE_ENV === "development";
 
+    // CASE: API call from external source, in production
     if (!reqUser && !isDevelopment)
-      throw new AuthenticationError("you are not authenticated");
+      throw new AuthenticationError("you are not authenticated"); // find a sleeker implementation for this - only if [""] was not passed in header
 
+    // CASE: API call from external source, in development
     if (!reqUser && isDevelopment) {
-      // RUNS ON GraphQL playground, not performant, but is only relevant in playground
+      // Not performant, but runs only in development playground
       const birb = {
         name: "Birb",
         email: "birb@kurzgesagt.com",
@@ -49,11 +53,10 @@ const server = new ApolloServer({
       return { prisma, user };
     }
 
-    if (reqUser!.length !== 3 && !isDevelopment)
-      throw new AuthenticationError(
-        "proper user credentials not passed in header"
-      );
+    // CASE: in app, but not logged in
+    if (reqUser!.length !== 3) return { prisma };
 
+    // CASE: in app, logged in
     const reqUserFormatted = {
       email: reqUser![0],
       name: reqUser![1],

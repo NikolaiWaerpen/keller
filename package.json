@@ -4,7 +4,8 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "dev": "docker-compose up -d; npx prisma migrate dev; npx prisma generate; NODE_ENV='development' tsnd --respawn --transpile-only index.ts",
+    "dev": "NODE_ENV='development' tsnd --respawn index.ts",
+    "dev:setup": "docker-compose up -d; npx prisma migrate dev; npx prisma generate; NODE_ENV='development' tsnd --respawn index.ts",
     "start": "tsc && node dist/index.js",
     "prisma:generate": "npx prisma generate",
     "prisma:format": "npx prisma format",
