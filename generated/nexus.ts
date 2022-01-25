@@ -78,10 +78,6 @@ export interface NexusGenInputs {
   GetUserInput: { // input type
     email: string; // String!
   }
-  UpdatePublicAddressInput: { // input type
-    email: string; // String!
-    publicAddress: string; // String!
-  }
 }
 
 export interface NexusGenEnums {
@@ -114,7 +110,6 @@ export interface NexusGenObjects {
     id: number; // Int!
     image: string; // String!
     name: string; // String!
-    publicAddress?: string | null; // String
   }
 }
 
@@ -140,7 +135,6 @@ export interface NexusGenFieldTypes {
     createGreeting: NexusGenRootTypes['Greeting'] | null; // Greeting
     deleteGreeting: NexusGenRootTypes['Greeting'] | null; // Greeting
     editGreeting: NexusGenRootTypes['Greeting'] | null; // Greeting
-    updatePublicAddress: NexusGenRootTypes['User'] | null; // User
   }
   Query: { // field return type
     greetings: NexusGenRootTypes['Greeting'][]; // [Greeting!]!
@@ -152,7 +146,6 @@ export interface NexusGenFieldTypes {
     id: number; // Int!
     image: string; // String!
     name: string; // String!
-    publicAddress: string | null; // String
   }
 }
 
@@ -168,7 +161,6 @@ export interface NexusGenFieldTypeNames {
     createGreeting: 'Greeting'
     deleteGreeting: 'Greeting'
     editGreeting: 'Greeting'
-    updatePublicAddress: 'User'
   }
   Query: { // field return type name
     greetings: 'Greeting'
@@ -180,7 +172,6 @@ export interface NexusGenFieldTypeNames {
     id: 'Int'
     image: 'String'
     name: 'String'
-    publicAddress: 'String'
   }
 }
 
@@ -194,9 +185,6 @@ export interface NexusGenArgTypes {
     }
     editGreeting: { // args
       input: NexusGenInputs['EditGreetingInput']; // EditGreetingInput!
-    }
-    updatePublicAddress: { // args
-      input: NexusGenInputs['UpdatePublicAddressInput']; // UpdatePublicAddressInput!
     }
   }
   Query: {
