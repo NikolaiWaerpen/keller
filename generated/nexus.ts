@@ -75,6 +75,9 @@ export interface NexusGenInputs {
     id: number; // Int!
     title: string; // String!
   }
+  GetBotTrades: { // input type
+    address: string; // String!
+  }
   GetUserInput: { // input type
     email: string; // String!
   }
@@ -161,7 +164,7 @@ export interface NexusGenFieldTypes {
     updatePublicAddress: NexusGenRootTypes['User'] | null; // User
   }
   Query: { // field return type
-    bot: NexusGenRootTypes['Bot'][]; // [Bot!]!
+    botTrades: NexusGenRootTypes['Bot'][]; // [Bot!]!
     greetings: NexusGenRootTypes['Greeting'][]; // [Greeting!]!
     user: NexusGenRootTypes['User']; // User!
     users: NexusGenRootTypes['User'][]; // [User!]!
@@ -199,7 +202,7 @@ export interface NexusGenFieldTypeNames {
     updatePublicAddress: 'User'
   }
   Query: { // field return type name
-    bot: 'Bot'
+    botTrades: 'Bot'
     greetings: 'Greeting'
     user: 'User'
     users: 'User'
@@ -229,6 +232,9 @@ export interface NexusGenArgTypes {
     }
   }
   Query: {
+    botTrades: { // args
+      input: NexusGenInputs['GetBotTrades']; // GetBotTrades!
+    }
     user: { // args
       input: NexusGenInputs['GetUserInput']; // GetUserInput!
     }
