@@ -78,6 +78,7 @@ export const botQuery = extendType({
 
           const decrease = 1000000000000000000;
           const fees = event.asset.asset_contract.seller_fee_basis_points / 100;
+          console.log(fees);
           const profit = sellEvent
             ? +sellEvent.total_price -
               +event.total_price -
