@@ -101,6 +101,14 @@ export interface NexusGenScalars {
 }
 
 export interface NexusGenObjects {
+  Bot: { // root type
+    buy: string; // String!
+    collection: string; // String!
+    fees: number; // Float!
+    link: string; // String!
+    profit: string; // String!
+    sell: string; // String!
+  }
   Greeting: { // root type
     comment: string; // String!
     createdAt: NexusGenScalars['DateTime']; // DateTime!
@@ -129,6 +137,14 @@ export type NexusGenRootTypes = NexusGenObjects
 export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars
 
 export interface NexusGenFieldTypes {
+  Bot: { // field return type
+    buy: string; // String!
+    collection: string; // String!
+    fees: number; // Float!
+    link: string; // String!
+    profit: string; // String!
+    sell: string; // String!
+  }
   Greeting: { // field return type
     author: NexusGenRootTypes['User']; // User!
     comment: string; // String!
@@ -143,6 +159,7 @@ export interface NexusGenFieldTypes {
     updatePublicAddress: NexusGenRootTypes['User'] | null; // User
   }
   Query: { // field return type
+    bot: NexusGenRootTypes['Bot'][]; // [Bot!]!
     greetings: NexusGenRootTypes['Greeting'][]; // [Greeting!]!
     user: NexusGenRootTypes['User']; // User!
     users: NexusGenRootTypes['User'][]; // [User!]!
@@ -157,6 +174,14 @@ export interface NexusGenFieldTypes {
 }
 
 export interface NexusGenFieldTypeNames {
+  Bot: { // field return type name
+    buy: 'String'
+    collection: 'String'
+    fees: 'Float'
+    link: 'String'
+    profit: 'String'
+    sell: 'String'
+  }
   Greeting: { // field return type name
     author: 'User'
     comment: 'String'
@@ -171,6 +196,7 @@ export interface NexusGenFieldTypeNames {
     updatePublicAddress: 'User'
   }
   Query: { // field return type name
+    bot: 'Bot'
     greetings: 'Greeting'
     user: 'User'
     users: 'User'
