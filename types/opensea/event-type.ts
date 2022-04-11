@@ -28,7 +28,7 @@ export interface AssetEvent {
   seller: FromAccount | null;
   starting_price: null | string;
   to_account: null;
-  total_price: null;
+  total_price: string;
   transaction: null;
   winner_account: null;
   listing_time: Date | null;

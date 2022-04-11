@@ -104,10 +104,11 @@ export interface NexusGenObjects {
   Bot: { // root type
     buy: string; // String!
     collection: string; // String!
-    fees: number; // Float!
+    fees: string; // String!
     link: string; // String!
     profit: string; // String!
     sell: string; // String!
+    tokenId: string; // String!
   }
   Greeting: { // root type
     comment: string; // String!
@@ -140,10 +141,11 @@ export interface NexusGenFieldTypes {
   Bot: { // field return type
     buy: string; // String!
     collection: string; // String!
-    fees: number; // Float!
+    fees: string; // String!
     link: string; // String!
     profit: string; // String!
     sell: string; // String!
+    tokenId: string; // String!
   }
   Greeting: { // field return type
     author: NexusGenRootTypes['User']; // User!
@@ -177,10 +179,11 @@ export interface NexusGenFieldTypeNames {
   Bot: { // field return type name
     buy: 'String'
     collection: 'String'
-    fees: 'Float'
+    fees: 'String'
     link: 'String'
     profit: 'String'
     sell: 'String'
+    tokenId: 'String'
   }
   Greeting: { // field return type name
     author: 'User'
