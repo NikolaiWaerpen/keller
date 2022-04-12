@@ -1,4 +1,4 @@
-import { OPENSEA_API_URL } from "../consts";
+import { OPENSEA_API_URL } from "../../consts";
 import fetch from "node-fetch";
 
 export enum OPENSEA_ENDPOINT {

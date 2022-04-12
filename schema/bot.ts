@@ -1,45 +1,43 @@
 import { arg, extendType, inputObjectType, nonNull, objectType } from "nexus";
-import openseaFetch, { OPENSEA_ENDPOINT } from "../queries/opensea-fetch";
-import { AssetEvent, EventType } from "../types/opensea/event-type";
+import getAllTrades from "../queries/bot/get-all-trades";
+import getEthereumPrice from "../queries/bot/get-ethereum-price";
+import { AssetEvent } from "../types/bot/event-type";
 
 type GroupedEventsType = { sell: AssetEvent[]; buy: AssetEvent[] };
 
-export const botObjectType = objectType({
-  name: "Bot",
+export const botTradesObjectType = objectType({
+  name: "BotTrades",
   definition(t) {
     t.nonNull.string("tokenId");
     t.nonNull.string("collection");
     t.nonNull.string("link");
     t.nonNull.string("fees");
     t.nonNull.string("buy");
+    t.nonNull.string("buyDate");
     t.nonNull.string("sell");
+    t.nonNull.string("sellDate");
     t.nonNull.string("profit");
+    t.nonNull.string("nokProfit");
   },
 });
 
-async function getAllEvents(address: string) {
-  let allEvents: AssetEvent[] = [];
-  let next = true;
-  let cursor = "";
-
-  while (next) {
-    const events = await openseaFetch<EventType>(
-      OPENSEA_ENDPOINT.events,
-      `event_type=successful&limit=300&account_address=${address}&cursor=${cursor}`
-    );
-
-    allEvents = [...allEvents, ...events.asset_events];
-
-    cursor = events.next;
-
-    if (!cursor) next = false;
-  }
-
-  return allEvents;
-}
-
 export const getBotTrades = inputObjectType({
   name: "GetBotTrades",
+  definition: (t) => {
+    t.nonNull.string("address");
+  },
+});
+
+export const netProfitObjectType = objectType({
+  name: "NetProfit",
+  definition(t) {
+    t.nonNull.string("netProfitTotal");
+    t.nonNull.string("netProfitTotalNok");
+  },
+});
+
+export const getNetProfit = inputObjectType({
+  name: "GetNetProfit",
   definition: (t) => {
     t.nonNull.string("address");
   },
@@ -49,17 +47,20 @@ export const botQuery = extendType({
   type: "Query",
   definition: (t) => {
     t.nonNull.list.nonNull.field("botTrades", {
-      type: botObjectType,
+      type: botTradesObjectType,
       args: { input: nonNull(arg({ type: getBotTrades.name })) },
       resolve: async (_, { input: { address } }) => {
-        const events = await getAllEvents(address);
+        const [allTrades, ethereumPrice] = await Promise.all([
+          getAllTrades(address),
+          getEthereumPrice(),
+        ]);
 
         const initial: GroupedEventsType = {
           sell: [],
           buy: [],
         };
 
-        const groupedEvents = events.reduce((accumulator, current) => {
+        const groupedTrades = allTrades.reduce((accumulator, current) => {
           const sold =
             current.seller?.address.toLowerCase() === address.toLowerCase();
 
@@ -69,37 +70,109 @@ export const botQuery = extendType({
           return accumulator;
         }, initial);
 
-        const formatted = groupedEvents.buy.map((event) => {
-          const tokenId = event.asset.token_id;
+        const formatted = groupedTrades.buy.map((buyTrade) => {
+          const tokenId = buyTrade.asset.token_id;
 
-          const sellEvent = groupedEvents.sell.find(
-            (event) => event.asset.token_id === tokenId
+          const sellTrade = groupedTrades.sell.find(
+            (buyTrade) => buyTrade.asset.token_id === tokenId
           );
 
           const decrease = 1000000000000000000;
-          const fees = event.asset.asset_contract.seller_fee_basis_points / 100;
-          const profit = sellEvent
-            ? +sellEvent.total_price -
-              +event.total_price -
-              (+sellEvent.total_price * fees) / 100
+          const fees =
+            buyTrade.asset.asset_contract.seller_fee_basis_points / 100;
+          const profit = sellTrade
+            ? (+sellTrade.total_price -
+                +buyTrade.total_price -
+                (+sellTrade.total_price * fees) / 100) /
+              decrease
             : "N/A";
-          const sell = sellEvent ? +sellEvent.total_price : "not sold";
-          const buy = +event.total_price;
+
+          // BUY
+          const buy = +buyTrade.total_price,
+            buyDate = `${buyTrade.created_date}`;
+
+          // SELL
+          const sell = sellTrade ? +sellTrade.total_price : "N/A",
+            sellDate = `${sellTrade ? sellTrade.created_date : "N/A"}`;
 
           return {
             tokenId,
-            collection: `${event.collection_slug}`,
-            link: event.asset.permalink,
+            collection: `${buyTrade.collection_slug}`,
+            link: buyTrade.asset.permalink,
             fees: `${fees}`,
             buy: `${buy / decrease}`,
+            buyDate,
             sell: `${typeof sell === "number" ? sell / decrease : sell}`,
-            profit: `${
-              typeof profit === "number" ? profit / decrease : profit
+            sellDate,
+            profit: `${profit}`,
+            nokProfit: `${
+              typeof profit === "number" ? profit * +ethereumPrice.NOK : profit
             }`,
           };
         });
 
         return formatted;
+      },
+    });
+
+    t.nonNull.field("netProfit", {
+      type: netProfitObjectType,
+      args: { input: nonNull(arg({ type: getNetProfit.name })) },
+      resolve: async (_, { input: { address } }) => {
+        const [allTrades, ethereumPrice] = await Promise.all([
+          getAllTrades(address),
+          getEthereumPrice(),
+        ]);
+
+        const initial: GroupedEventsType = {
+          sell: [],
+          buy: [],
+        };
+
+        const groupedTrades = allTrades.reduce((accumulator, current) => {
+          const sold =
+            current.seller?.address.toLowerCase() === address.toLowerCase();
+
+          if (sold) accumulator.sell.push(current);
+          else accumulator.buy.push(current);
+
+          return accumulator;
+        }, initial);
+
+        const profits = groupedTrades.buy.map((buyTrade) => {
+          const tokenId = buyTrade.asset.token_id;
+
+          const sellTrade = groupedTrades.sell.find(
+            (buyTrade) => buyTrade.asset.token_id === tokenId
+          );
+
+          const decrease = 1000000000000000000;
+          const fees =
+            buyTrade.asset.asset_contract.seller_fee_basis_points / 100;
+
+          const profit = sellTrade
+            ? (+sellTrade.total_price -
+                +buyTrade.total_price -
+                (+sellTrade.total_price * fees) / 100) /
+              decrease
+            : undefined;
+
+          return profit;
+        });
+
+        const trades = profits.filter((profit) => profit) as number[];
+
+        const netProfitTotal = trades.reduce((accumulator, current) => {
+          accumulator += current;
+          return accumulator;
+        }, 0);
+
+        const netProfitTotalNok = netProfitTotal * ethereumPrice.NOK;
+
+        return {
+          netProfitTotal: "" + netProfitTotal,
+          netProfitTotalNok: "" + netProfitTotalNok,
+        };
       },
     });
   },
