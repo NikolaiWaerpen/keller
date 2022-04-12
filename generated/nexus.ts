@@ -76,10 +76,7 @@ export interface NexusGenInputs {
     title: string; // String!
   }
   GetBotTrades: { // input type
-    address: string; // String!
-  }
-  GetNetProfit: { // input type
-    address: string; // String!
+    addresses: string[]; // [String!]!
   }
   GetUserInput: { // input type
     email: string; // String!
@@ -113,10 +110,9 @@ export interface NexusGenObjects {
     collection: string; // String!
     fees: string; // String!
     link: string; // String!
-    nokProfit: string; // String!
-    profit: string; // String!
-    sell: string; // String!
-    sellDate: string; // String!
+    profit?: string | null; // String
+    sell?: string | null; // String
+    sellDate?: string | null; // String
     tokenId: string; // String!
   }
   Greeting: { // root type
@@ -126,10 +122,6 @@ export interface NexusGenObjects {
     title: string; // String!
   }
   Mutation: {};
-  NetProfit: { // root type
-    netProfitTotal: string; // String!
-    netProfitTotalNok: string; // String!
-  }
   Query: {};
   User: { // root type
     email: string; // String!
@@ -157,10 +149,9 @@ export interface NexusGenFieldTypes {
     collection: string; // String!
     fees: string; // String!
     link: string; // String!
-    nokProfit: string; // String!
-    profit: string; // String!
-    sell: string; // String!
-    sellDate: string; // String!
+    profit: string | null; // String
+    sell: string | null; // String
+    sellDate: string | null; // String
     tokenId: string; // String!
   }
   Greeting: { // field return type
@@ -176,14 +167,9 @@ export interface NexusGenFieldTypes {
     editGreeting: NexusGenRootTypes['Greeting'] | null; // Greeting
     updatePublicAddress: NexusGenRootTypes['User'] | null; // User
   }
-  NetProfit: { // field return type
-    netProfitTotal: string; // String!
-    netProfitTotalNok: string; // String!
-  }
   Query: { // field return type
     botTrades: NexusGenRootTypes['BotTrades'][]; // [BotTrades!]!
     greetings: NexusGenRootTypes['Greeting'][]; // [Greeting!]!
-    netProfit: NexusGenRootTypes['NetProfit']; // NetProfit!
     user: NexusGenRootTypes['User']; // User!
     users: NexusGenRootTypes['User'][]; // [User!]!
   }
@@ -203,7 +189,6 @@ export interface NexusGenFieldTypeNames {
     collection: 'String'
     fees: 'String'
     link: 'String'
-    nokProfit: 'String'
     profit: 'String'
     sell: 'String'
     sellDate: 'String'
@@ -222,14 +207,9 @@ export interface NexusGenFieldTypeNames {
     editGreeting: 'Greeting'
     updatePublicAddress: 'User'
   }
-  NetProfit: { // field return type name
-    netProfitTotal: 'String'
-    netProfitTotalNok: 'String'
-  }
   Query: { // field return type name
     botTrades: 'BotTrades'
     greetings: 'Greeting'
-    netProfit: 'NetProfit'
     user: 'User'
     users: 'User'
   }
@@ -260,9 +240,6 @@ export interface NexusGenArgTypes {
   Query: {
     botTrades: { // args
       input: NexusGenInputs['GetBotTrades']; // GetBotTrades!
-    }
-    netProfit: { // args
-      input: NexusGenInputs['GetNetProfit']; // GetNetProfit!
     }
     user: { // args
       input: NexusGenInputs['GetUserInput']; // GetUserInput!
