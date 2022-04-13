@@ -17,6 +17,7 @@ export const botTradesObjectType = objectType({
     t.string("sell");
     t.string("sellDate");
     t.string("profit");
+    t.string("profitMargin");
   },
 });
 
@@ -65,11 +66,29 @@ export const botQuery = extendType({
         }, initial);
 
         const formatted = groupedTrades.buy.map((buyTrade) => {
-          const tokenId = buyTrade.asset.token_id;
+          // some assets don't have the asset field - filter those out
+          if (!buyTrade.asset) {
+            return {
+              tokenId: "N/A",
+              collection: "N/A",
+              link: "N/A",
+              fees: "N/A",
+              buy: "N/A",
+              buyDate: "N/A",
+              sell: null,
+              sellDate: null,
+              profit: null,
+              profitMargin: null,
+            };
+          }
 
-          const sellTrade = groupedTrades.sell.find(
-            (buyTrade) => buyTrade.asset.token_id === tokenId
-          );
+          const assetId = buyTrade.asset.id;
+
+          const sellTrade = groupedTrades.sell.find((sellTrade) => {
+            // short-circuit due to the missing asset field on some events
+            if (!sellTrade.asset) return false;
+            return sellTrade.asset.id === assetId;
+          });
 
           const decrease = 1000000000000000000;
           const fees =
@@ -91,8 +110,14 @@ export const botQuery = extendType({
                 decrease
             : undefined;
 
+          let profitMargin: null | string = null;
+          if (profit && sell) {
+            profitMargin = "" + (+profit / +sell) * 100;
+            profitMargin = profitMargin.slice(0, 12);
+          }
+
           return {
-            tokenId,
+            tokenId: buyTrade.asset.token_id ? buyTrade.asset.token_id : "N/A",
             collection: `${buyTrade.collection_slug}`,
             link: buyTrade.asset.permalink,
             fees: `${fees}`,
@@ -101,6 +126,7 @@ export const botQuery = extendType({
             sell: sell !== null ? "" + +sell / decrease : sell,
             sellDate,
             profit,
+            profitMargin,
           };
         });
 

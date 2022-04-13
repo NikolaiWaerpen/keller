@@ -111,6 +111,7 @@ export interface NexusGenObjects {
     fees: string; // String!
     link: string; // String!
     profit?: string | null; // String
+    profitMargin?: string | null; // String
     sell?: string | null; // String
     sellDate?: string | null; // String
     tokenId: string; // String!
@@ -150,6 +151,7 @@ export interface NexusGenFieldTypes {
     fees: string; // String!
     link: string; // String!
     profit: string | null; // String
+    profitMargin: string | null; // String
     sell: string | null; // String
     sellDate: string | null; // String
     tokenId: string; // String!
@@ -190,6 +192,7 @@ export interface NexusGenFieldTypeNames {
     fees: 'String'
     link: 'String'
     profit: 'String'
+    profitMargin: 'String'
     sell: 'String'
     sellDate: 'String'
     tokenId: 'String'
