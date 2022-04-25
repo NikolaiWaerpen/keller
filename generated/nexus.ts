@@ -81,6 +81,9 @@ export interface NexusGenInputs {
   GetUserInput: { // input type
     email: string; // String!
   }
+  RunBotInput: { // input type
+    run: boolean; // Boolean!
+  }
   UpdatePublicAddressInput: { // input type
     email: string; // String!
     publicAddress: string; // String!
@@ -124,6 +127,9 @@ export interface NexusGenObjects {
   }
   Mutation: {};
   Query: {};
+  RunBot: { // root type
+    running: boolean; // Boolean!
+  }
   User: { // root type
     email: string; // String!
     id: number; // Int!
@@ -167,6 +173,8 @@ export interface NexusGenFieldTypes {
     createGreeting: NexusGenRootTypes['Greeting'] | null; // Greeting
     deleteGreeting: NexusGenRootTypes['Greeting'] | null; // Greeting
     editGreeting: NexusGenRootTypes['Greeting'] | null; // Greeting
+    killBot: NexusGenRootTypes['RunBot'] | null; // RunBot
+    runBot: NexusGenRootTypes['RunBot'] | null; // RunBot
     updatePublicAddress: NexusGenRootTypes['User'] | null; // User
   }
   Query: { // field return type
@@ -174,6 +182,9 @@ export interface NexusGenFieldTypes {
     greetings: NexusGenRootTypes['Greeting'][]; // [Greeting!]!
     user: NexusGenRootTypes['User']; // User!
     users: NexusGenRootTypes['User'][]; // [User!]!
+  }
+  RunBot: { // field return type
+    running: boolean; // Boolean!
   }
   User: { // field return type
     email: string; // String!
@@ -208,6 +219,8 @@ export interface NexusGenFieldTypeNames {
     createGreeting: 'Greeting'
     deleteGreeting: 'Greeting'
     editGreeting: 'Greeting'
+    killBot: 'RunBot'
+    runBot: 'RunBot'
     updatePublicAddress: 'User'
   }
   Query: { // field return type name
@@ -215,6 +228,9 @@ export interface NexusGenFieldTypeNames {
     greetings: 'Greeting'
     user: 'User'
     users: 'User'
+  }
+  RunBot: { // field return type name
+    running: 'Boolean'
   }
   User: { // field return type name
     email: 'String'
