@@ -135,7 +135,6 @@ export interface NexusGenObjects {
     id: number; // Int!
     image: string; // String!
     name: string; // String!
-    publicAddress?: string | null; // String
   }
 }
 
@@ -191,7 +190,6 @@ export interface NexusGenFieldTypes {
     id: number; // Int!
     image: string; // String!
     name: string; // String!
-    publicAddress: string | null; // String
   }
 }
 
@@ -237,7 +235,6 @@ export interface NexusGenFieldTypeNames {
     id: 'Int'
     image: 'String'
     name: 'String'
-    publicAddress: 'String'
   }
 }
 
@@ -251,9 +248,6 @@ export interface NexusGenArgTypes {
     }
     editGreeting: { // args
       input: NexusGenInputs['EditGreetingInput']; // EditGreetingInput!
-    }
-    updatePublicAddress: { // args
-      input: NexusGenInputs['UpdatePublicAddressInput']; // UpdatePublicAddressInput!
     }
   }
   Query: {

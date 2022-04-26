@@ -2,7 +2,7 @@ import { ApolloError } from "apollo-server";
 import { arg, extendType, inputObjectType, nonNull, objectType } from "nexus";
 import { User } from "nexus-prisma";
 
-const { $name, id, name, email, image, publicAddress } = User;
+const { $name, id, name, email, image } = User;
 
 export const userObjectType = objectType({
   name: $name,
@@ -11,7 +11,6 @@ export const userObjectType = objectType({
     t.field(name);
     t.field(email);
     t.field(image);
-    t.field(publicAddress);
   },
 });
 
@@ -60,32 +59,32 @@ export const userQuery = extendType({
 
 // MUTATION
 
-export const updatePublicAddressInput = inputObjectType({
-  name: "UpdatePublicAddressInput",
-  definition: (t) => {
-    t.nonNull.string("email");
-    t.nonNull.string("publicAddress");
-  },
-});
+// export const updatePublicAddressInput = inputObjectType({
+//   name: "UpdatePublicAddressInput",
+//   definition: (t) => {
+//     t.nonNull.string("email");
+//     t.nonNull.string("publicAddress");
+//   },
+// });
 
-export const userMutation = extendType({
-  type: "Mutation",
-  definition: (t) => {
-    t.field("updatePublicAddress", {
-      type: $name,
-      args: { input: nonNull(arg({ type: updatePublicAddressInput.name })) },
-      resolve: async (_, args, { prisma }) => {
-        const { email, publicAddress } = args.input;
+// export const userMutation = extendType({
+//   type: "Mutation",
+//   definition: (t) => {
+//     t.field("updatePublicAddress", {
+//       type: $name,
+//       args: { input: nonNull(arg({ type: updatePublicAddressInput.name })) },
+//       resolve: async (_, args, { prisma }) => {
+//         const { email, publicAddress } = args.input;
 
-        return await prisma.user.update({
-          where: {
-            email,
-          },
-          data: {
-            publicAddress,
-          },
-        });
-      },
-    });
-  },
-});
+//         return await prisma.user.update({
+//           where: {
+//             email,
+//           },
+//           data: {
+//             publicAddress,
+//           },
+//         });
+//       },
+//     });
+//   },
+// });
