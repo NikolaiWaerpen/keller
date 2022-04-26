@@ -75,8 +75,18 @@ export interface NexusGenInputs {
     id: number; // Int!
     title: string; // String!
   }
+  GetBotTrades: { // input type
+    addresses: string[]; // [String!]!
+  }
   GetUserInput: { // input type
     email: string; // String!
+  }
+  RunBotInput: { // input type
+    run: boolean; // Boolean!
+  }
+  UpdatePublicAddressInput: { // input type
+    email: string; // String!
+    publicAddress: string; // String!
   }
 }
 
@@ -97,6 +107,18 @@ export interface NexusGenScalars {
 }
 
 export interface NexusGenObjects {
+  BotTrades: { // root type
+    buy: string; // String!
+    buyDate: string; // String!
+    collection: string; // String!
+    fees: string; // String!
+    link: string; // String!
+    profit?: string | null; // String
+    profitMargin?: string | null; // String
+    sell?: string | null; // String
+    sellDate?: string | null; // String
+    tokenId: string; // String!
+  }
   Greeting: { // root type
     comment: string; // String!
     createdAt: NexusGenScalars['DateTime']; // DateTime!
@@ -105,6 +127,9 @@ export interface NexusGenObjects {
   }
   Mutation: {};
   Query: {};
+  RunBot: { // root type
+    running: boolean; // Boolean!
+  }
   User: { // root type
     email: string; // String!
     id: number; // Int!
@@ -124,6 +149,18 @@ export type NexusGenRootTypes = NexusGenObjects
 export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars
 
 export interface NexusGenFieldTypes {
+  BotTrades: { // field return type
+    buy: string; // String!
+    buyDate: string; // String!
+    collection: string; // String!
+    fees: string; // String!
+    link: string; // String!
+    profit: string | null; // String
+    profitMargin: string | null; // String
+    sell: string | null; // String
+    sellDate: string | null; // String
+    tokenId: string; // String!
+  }
   Greeting: { // field return type
     author: NexusGenRootTypes['User']; // User!
     comment: string; // String!
@@ -135,11 +172,18 @@ export interface NexusGenFieldTypes {
     createGreeting: NexusGenRootTypes['Greeting'] | null; // Greeting
     deleteGreeting: NexusGenRootTypes['Greeting'] | null; // Greeting
     editGreeting: NexusGenRootTypes['Greeting'] | null; // Greeting
+    killBot: NexusGenRootTypes['RunBot'] | null; // RunBot
+    runBot: NexusGenRootTypes['RunBot'] | null; // RunBot
+    updatePublicAddress: NexusGenRootTypes['User'] | null; // User
   }
   Query: { // field return type
+    botTrades: NexusGenRootTypes['BotTrades'][]; // [BotTrades!]!
     greetings: NexusGenRootTypes['Greeting'][]; // [Greeting!]!
     user: NexusGenRootTypes['User']; // User!
     users: NexusGenRootTypes['User'][]; // [User!]!
+  }
+  RunBot: { // field return type
+    running: boolean; // Boolean!
   }
   User: { // field return type
     email: string; // String!
@@ -150,6 +194,18 @@ export interface NexusGenFieldTypes {
 }
 
 export interface NexusGenFieldTypeNames {
+  BotTrades: { // field return type name
+    buy: 'String'
+    buyDate: 'String'
+    collection: 'String'
+    fees: 'String'
+    link: 'String'
+    profit: 'String'
+    profitMargin: 'String'
+    sell: 'String'
+    sellDate: 'String'
+    tokenId: 'String'
+  }
   Greeting: { // field return type name
     author: 'User'
     comment: 'String'
@@ -161,11 +217,18 @@ export interface NexusGenFieldTypeNames {
     createGreeting: 'Greeting'
     deleteGreeting: 'Greeting'
     editGreeting: 'Greeting'
+    killBot: 'RunBot'
+    runBot: 'RunBot'
+    updatePublicAddress: 'User'
   }
   Query: { // field return type name
+    botTrades: 'BotTrades'
     greetings: 'Greeting'
     user: 'User'
     users: 'User'
+  }
+  RunBot: { // field return type name
+    running: 'Boolean'
   }
   User: { // field return type name
     email: 'String'
@@ -188,6 +251,9 @@ export interface NexusGenArgTypes {
     }
   }
   Query: {
+    botTrades: { // args
+      input: NexusGenInputs['GetBotTrades']; // GetBotTrades!
+    }
     user: { // args
       input: NexusGenInputs['GetUserInput']; // GetUserInput!
     }
