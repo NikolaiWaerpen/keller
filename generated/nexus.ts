@@ -85,7 +85,7 @@ export interface NexusGenInputs {
     run: boolean; // Boolean!
   }
   SendTrumpQuoteInput: { // input type
-    recipent: string; // String!
+    recipient: string; // String!
     tag: string; // String!
   }
 }

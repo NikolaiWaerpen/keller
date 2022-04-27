@@ -1,9 +1,10 @@
 import { arg, extendType, inputObjectType, nonNull } from "nexus";
 import fetch from "node-fetch";
-import { SMSRecipientType } from "../queries/gateway/send-sms";
+import sendSMS, { SMSRecipientType } from "../queries/gateway/send-sms";
 import { QuotesType } from "../types/trump-quote/quotes";
 import { Tags } from "../types/trump-quote/tags";
 import formatDate from "../utils/format-date";
+import { URL } from "url";
 
 export const trumpQuoteQuery = extendType({
   type: "Query",
@@ -26,7 +27,7 @@ export const sendTrumpQuoteArgs = inputObjectType({
   name: "SendTrumpQuoteInput",
   definition(t) {
     t.nonNull.string("tag");
-    t.nonNull.string("recipent");
+    t.nonNull.string("recipient");
   },
 });
 
@@ -37,10 +38,12 @@ export const trumpQuoteMutation = extendType({
       args: { input: nonNull(arg({ type: sendTrumpQuoteArgs.name })) },
       async resolve(_, args) {
         const {
-          input: { recipent, tag },
+          input: { recipient, tag },
         } = args;
 
-        const recipients: SMSRecipientType[] = [{ msisdn: parseInt(recipent) }];
+        const recipients: SMSRecipientType[] = [
+          { msisdn: parseInt(recipient) },
+        ];
 
         const url = new URL("https://tronalddump.io/search/quote");
         url.searchParams.set("tag", tag);
@@ -54,19 +57,17 @@ export const trumpQuoteMutation = extendType({
             Math.floor(Math.random() * jsonQuotes.count)
           ];
 
-        const message = `${randomQuote.value.replaceAll(
-          "’",
-          "'"
-        )} // ’ is not a valid char over text
+        // // ’ is not a valid char over text
+        const message = `${randomQuote.value.replaceAll("’", "'")} 
 
 - Trump ${formatDate({
           date: new Date(randomQuote.appeared_at),
           format: "YYYY",
         })}`;
 
-        // await sendSMS({ message, recipients, sender: "The Donald" });
+        await sendSMS({ message, recipients, sender: "The Donald" });
 
-        return "Check your SMS!";
+        return "Check your phone!'";
       },
     });
   },
