@@ -1,4 +1,4 @@
-import sleep from "./utils/sleep";
+import sleep from "../utils/sleep";
 
 async function dummyCalcifer() {
   console.log("I am dummy calcifer");

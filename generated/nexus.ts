@@ -84,9 +84,9 @@ export interface NexusGenInputs {
   RunBotInput: { // input type
     run: boolean; // Boolean!
   }
-  UpdatePublicAddressInput: { // input type
-    email: string; // String!
-    publicAddress: string; // String!
+  SendTrumpQuoteInput: { // input type
+    recipent: string; // String!
+    tag: string; // String!
   }
 }
 
@@ -174,11 +174,12 @@ export interface NexusGenFieldTypes {
     editGreeting: NexusGenRootTypes['Greeting'] | null; // Greeting
     killBot: NexusGenRootTypes['RunBot'] | null; // RunBot
     runBot: NexusGenRootTypes['RunBot'] | null; // RunBot
-    updatePublicAddress: NexusGenRootTypes['User'] | null; // User
+    sendTrumpQuote: boolean; // Boolean!
   }
   Query: { // field return type
     botTrades: NexusGenRootTypes['BotTrades'][]; // [BotTrades!]!
     greetings: NexusGenRootTypes['Greeting'][]; // [Greeting!]!
+    tags: string[]; // [String!]!
     user: NexusGenRootTypes['User']; // User!
     users: NexusGenRootTypes['User'][]; // [User!]!
   }
@@ -219,11 +220,12 @@ export interface NexusGenFieldTypeNames {
     editGreeting: 'Greeting'
     killBot: 'RunBot'
     runBot: 'RunBot'
-    updatePublicAddress: 'User'
+    sendTrumpQuote: 'Boolean'
   }
   Query: { // field return type name
     botTrades: 'BotTrades'
     greetings: 'Greeting'
+    tags: 'String'
     user: 'User'
     users: 'User'
   }
@@ -248,6 +250,9 @@ export interface NexusGenArgTypes {
     }
     editGreeting: { // args
       input: NexusGenInputs['EditGreetingInput']; // EditGreetingInput!
+    }
+    sendTrumpQuote: { // args
+      input: NexusGenInputs['SendTrumpQuoteInput']; // SendTrumpQuoteInput!
     }
   }
   Query: {
