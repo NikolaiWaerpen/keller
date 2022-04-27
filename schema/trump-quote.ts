@@ -65,8 +65,6 @@ export const trumpQuoteMutation = extendType({
           format: "YYYY",
         })}`;
 
-        console.log(message, recipient);
-
         await sendSMS({ message, recipients, sender: "The Donald" });
 
         return "Check your phone!'";
