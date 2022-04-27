@@ -60,10 +60,12 @@ export const trumpQuoteMutation = extendType({
         // // ’ is not a valid char over text
         const message = `${randomQuote.value.replaceAll("’", "'")} 
 
-- Trump ${formatDate({
+- Donald Trump, ${formatDate({
           date: new Date(randomQuote.appeared_at),
           format: "YYYY",
         })}`;
+
+        console.log(message, recipient);
 
         await sendSMS({ message, recipients, sender: "The Donald" });
 
