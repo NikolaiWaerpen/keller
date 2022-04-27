@@ -1,7 +1,9 @@
-import { arg, extendType, inputObjectType, nonNull, objectType } from "nexus";
+import { arg, extendType, inputObjectType, nonNull } from "nexus";
 import fetch from "node-fetch";
-import sendSMS, { SMSRecipientType } from "../queries/gateway/send-sms";
+import { SMSRecipientType } from "../queries/gateway/send-sms";
+import { QuotesType } from "../types/trump-quote/quotes";
 import { Tags } from "../types/trump-quote/tags";
+import formatDate from "../utils/format-date";
 
 export const trumpQuoteQuery = extendType({
   type: "Query",
@@ -31,7 +33,7 @@ export const sendTrumpQuoteArgs = inputObjectType({
 export const trumpQuoteMutation = extendType({
   type: "Mutation",
   definition(t) {
-    t.nonNull.boolean("sendTrumpQuote", {
+    t.nonNull.string("sendTrumpQuote", {
       args: { input: nonNull(arg({ type: sendTrumpQuoteArgs.name })) },
       async resolve(_, args) {
         const {
@@ -40,27 +42,32 @@ export const trumpQuoteMutation = extendType({
 
         const recipients: SMSRecipientType[] = [{ msisdn: parseInt(recipent) }];
 
-        await sendSMS({ message: "test", recipients, sender: "Shrek" });
+        const url = new URL("https://tronalddump.io/search/quote");
+        url.searchParams.set("tag", tag);
 
-        return true;
+        const quotes = await fetch(url);
+        if (quotes.status !== 200) throw new Error("failed");
+        const jsonQuotes: QuotesType = await quotes.json();
+
+        const randomQuote =
+          jsonQuotes._embedded.quotes[
+            Math.floor(Math.random() * jsonQuotes.count)
+          ];
+
+        const message = `${randomQuote.value.replaceAll(
+          "’",
+          "'"
+        )} // ’ is not a valid char over text
+
+- Trump ${formatDate({
+          date: new Date(randomQuote.appeared_at),
+          format: "YYYY",
+        })}`;
+
+        // await sendSMS({ message, recipients, sender: "The Donald" });
+
+        return "Check your SMS!";
       },
     });
   },
 });
-
-// export const getBotTrades = inputObjectType({
-//   name: "GetBotTrades",
-//   definition: (t) => {
-//     t.nonNull.list.nonNull.string("addresses");
-//   },
-// });
-
-// export const trumpQuoteQuery = extendType({
-//   type: "Query",
-//   definition: (t) => {
-//     t.nonNull.list.nonNull.field("tag", {
-//       type: trumpQuoteTag,
-//       resolve: async () => {},
-//     });
-//   },
-// });

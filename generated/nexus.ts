@@ -174,7 +174,7 @@ export interface NexusGenFieldTypes {
     editGreeting: NexusGenRootTypes['Greeting'] | null; // Greeting
     killBot: NexusGenRootTypes['RunBot'] | null; // RunBot
     runBot: NexusGenRootTypes['RunBot'] | null; // RunBot
-    sendTrumpQuote: boolean; // Boolean!
+    sendTrumpQuote: string; // String!
   }
   Query: { // field return type
     botTrades: NexusGenRootTypes['BotTrades'][]; // [BotTrades!]!
@@ -220,7 +220,7 @@ export interface NexusGenFieldTypeNames {
     editGreeting: 'Greeting'
     killBot: 'RunBot'
     runBot: 'RunBot'
-    sendTrumpQuote: 'Boolean'
+    sendTrumpQuote: 'String'
   }
   Query: { // field return type name
     botTrades: 'BotTrades'
