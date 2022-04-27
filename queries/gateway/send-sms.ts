@@ -3,14 +3,14 @@ import util from "util";
 
 const { GATEWAY_API_TOKEN } = process.env;
 
-type RecipientType = {
+export type SMSRecipientType = {
   msisdn: number;
 };
 
 type SendSMSParamTypes = {
   sender: string;
   message: string;
-  recipients: RecipientType[];
+  recipients: SMSRecipientType[];
 };
 
 export default async function sendSMS({

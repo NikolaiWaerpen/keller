@@ -1,5 +1,6 @@
 import { arg, extendType, inputObjectType, nonNull, objectType } from "nexus";
 import fetch from "node-fetch";
+import sendSMS, { SMSRecipientType } from "../queries/gateway/send-sms";
 import { Tags } from "../types/trump-quote/tags";
 
 export const trumpQuoteQuery = extendType({
@@ -32,7 +33,15 @@ export const trumpQuoteMutation = extendType({
   definition(t) {
     t.nonNull.boolean("sendTrumpQuote", {
       args: { input: nonNull(arg({ type: sendTrumpQuoteArgs.name })) },
-      async resolve() {
+      async resolve(_, args) {
+        const {
+          input: { recipent, tag },
+        } = args;
+
+        const recipients: SMSRecipientType[] = [{ msisdn: parseInt(recipent) }];
+
+        await sendSMS({ message: "test", recipients, sender: "Shrek" });
+
         return true;
       },
     });
